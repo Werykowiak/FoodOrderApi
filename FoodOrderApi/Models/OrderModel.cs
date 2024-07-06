@@ -4,7 +4,6 @@ namespace FoodOrderApi.Models
 {
     public class OrderModel
     {
-        [Required]
         [Key]
         public int? Id { get; set; }
         public string Orderer { get; set; }
