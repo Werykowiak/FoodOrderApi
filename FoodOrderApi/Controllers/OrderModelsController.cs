@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using FoodOrderApi.Models;
+using FoodOrderApi.Hubs;
+using Microsoft.AspNet.SignalR;
 
 namespace FoodOrderApi.Controllers
 {
@@ -14,10 +16,12 @@ namespace FoodOrderApi.Controllers
     public class OrderModelsController : ControllerBase
     {
         private readonly ApiDbContext _context;
+        //private readonly IHubContext<OrderModelHub> _hubContext;
 
         public OrderModelsController(ApiDbContext context)
         {
             _context = context;
+            //_hubContext = hubContext;
         }
 
         // GET: api/OrderModels
@@ -80,6 +84,8 @@ namespace FoodOrderApi.Controllers
             Console.WriteLine("dodawanie");
             _context.OrderModel.Add(orderModel);
             await _context.SaveChangesAsync();
+
+            //await _hubContext.Clients.All.SendAsync
 
             return CreatedAtAction(nameof(GetOrderModel), new { id = orderModel.Id }, orderModel);
         }

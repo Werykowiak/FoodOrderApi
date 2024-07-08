@@ -5,7 +5,7 @@
 namespace FoodOrderApi.Migrations
 {
     /// <inheritdoc />
-    public partial class init : Migration
+    public partial class _0807 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -28,6 +28,23 @@ namespace FoodOrderApi.Migrations
                 {
                     table.PrimaryKey("PK_OrderModel", x => x.Id);
                 });
+
+            migrationBuilder.CreateTable(
+                name: "OrderPositionModel",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    User = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Position = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Additives = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Cost = table.Column<int>(type: "int", nullable: false),
+                    OrderId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_OrderPositionModel", x => x.Id);
+                });
         }
 
         /// <inheritdoc />
@@ -35,6 +52,9 @@ namespace FoodOrderApi.Migrations
         {
             migrationBuilder.DropTable(
                 name: "OrderModel");
+
+            migrationBuilder.DropTable(
+                name: "OrderPositionModel");
         }
     }
 }

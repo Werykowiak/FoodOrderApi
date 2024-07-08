@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FoodOrderApi.Migrations
 {
     [DbContext(typeof(ApiDbContext))]
-    [Migration("20240706181125_init")]
-    partial class init
+    [Migration("20240708090409_08.07")]
+    partial class _0807
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -63,6 +63,36 @@ namespace FoodOrderApi.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("OrderModel");
+                });
+
+            modelBuilder.Entity("FoodOrderApi.Models.OrderPositionModel", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Additives")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Cost")
+                        .HasColumnType("int");
+
+                    b.Property<int>("OrderId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Position")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("User")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("OrderPositionModel");
                 });
 #pragma warning restore 612, 618
         }

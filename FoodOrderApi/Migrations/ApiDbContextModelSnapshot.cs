@@ -61,6 +61,36 @@ namespace FoodOrderApi.Migrations
 
                     b.ToTable("OrderModel");
                 });
+
+            modelBuilder.Entity("FoodOrderApi.Models.OrderPositionModel", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Additives")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Cost")
+                        .HasColumnType("int");
+
+                    b.Property<int>("OrderId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Position")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("User")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("OrderPositionModel");
+                });
 #pragma warning restore 612, 618
         }
     }
