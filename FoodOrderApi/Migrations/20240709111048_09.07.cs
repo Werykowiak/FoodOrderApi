@@ -5,7 +5,7 @@
 namespace FoodOrderApi.Migrations
 {
     /// <inheritdoc />
-    public partial class _0807 : Migration
+    public partial class _0907 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -19,10 +19,12 @@ namespace FoodOrderApi.Migrations
                     Orderer = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     RestaurantName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     MinCost = table.Column<double>(type: "float", nullable: false),
+                    CurrentCost = table.Column<double>(type: "float", nullable: true),
                     DeliveryFee = table.Column<double>(type: "float", nullable: false),
                     MinCostForFreeDelivery = table.Column<double>(type: "float", nullable: true),
                     PhoneNumber = table.Column<int>(type: "int", nullable: false),
-                    AccountNumber = table.Column<int>(type: "int", nullable: false)
+                    AccountNumber = table.Column<int>(type: "int", nullable: false),
+                    IsClosed = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -37,9 +39,11 @@ namespace FoodOrderApi.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     User = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Position = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Comment = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Additives = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Cost = table.Column<int>(type: "int", nullable: false),
-                    OrderId = table.Column<int>(type: "int", nullable: false)
+                    Cost = table.Column<double>(type: "float", nullable: true),
+                    OrderId = table.Column<int>(type: "int", nullable: false),
+                    IsPaid = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {

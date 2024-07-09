@@ -34,9 +34,15 @@ namespace FoodOrderApi.Migrations
                         .IsRequired()
                         .HasColumnType("int");
 
+                    b.Property<double?>("CurrentCost")
+                        .HasColumnType("float");
+
                     b.Property<double?>("DeliveryFee")
                         .IsRequired()
                         .HasColumnType("float");
+
+                    b.Property<bool>("IsClosed")
+                        .HasColumnType("bit");
 
                     b.Property<double?>("MinCost")
                         .IsRequired()
@@ -64,17 +70,23 @@ namespace FoodOrderApi.Migrations
 
             modelBuilder.Entity("FoodOrderApi.Models.OrderPositionModel", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int?>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int?>("Id"));
 
                     b.Property<string>("Additives")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("Cost")
-                        .HasColumnType("int");
+                    b.Property<string>("Comment")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<double?>("Cost")
+                        .HasColumnType("float");
+
+                    b.Property<bool>("IsPaid")
+                        .HasColumnType("bit");
 
                     b.Property<int>("OrderId")
                         .HasColumnType("int");

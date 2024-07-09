@@ -81,8 +81,11 @@ namespace FoodOrderApi.Controllers
         [HttpPost]
         public async Task<ActionResult<OrderModel>> PostOrderModel(OrderModel orderModel)
         {
-            Console.WriteLine("dodawanie");
+            if (orderModel.CurrentCost == null)
+                orderModel.CurrentCost = 0;
+            //Console.WriteLine("dodawanie");
             _context.OrderModel.Add(orderModel);
+
             await _context.SaveChangesAsync();
 
             //await _hubContext.Clients.All.SendAsync
@@ -99,7 +102,13 @@ namespace FoodOrderApi.Controllers
             {
                 return NotFound();
             }
-
+            var orderPositionModel = await _context.OrderPositionModel
+                .Where(x => x.OrderId == orderModel.Id)
+                .ToListAsync();
+            foreach (var orderPosition in orderPositionModel)
+            {
+                _context.OrderPositionModel.Remove(orderPosition);
+            }
             _context.OrderModel.Remove(orderModel);
             await _context.SaveChangesAsync();
 

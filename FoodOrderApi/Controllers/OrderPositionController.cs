@@ -40,7 +40,7 @@ namespace FoodOrderApi.Controllers
 
             return orderPositionModel;
         }*/
-        
+
         [HttpGet("{orderId}")]
         public async Task<ActionResult<IEnumerable<OrderPositionModel>>> GetOrderPositionsByOrderId(int orderId)
         {
@@ -93,7 +93,13 @@ namespace FoodOrderApi.Controllers
         public async Task<ActionResult<OrderPositionModel>> PostOrderPositionModel(OrderPositionModel orderPositionModel)
         {
             _context.OrderPositionModel.Add(orderPositionModel);
-            await _context.SaveChangesAsync();
+            var order = await _context.OrderModel.FindAsync(orderPositionModel.OrderId);
+            if (order != null)
+            {
+                order.CurrentCost += orderPositionModel.Cost;
+                //_context.Entry(orderPositionModel).State = EntityState.Modified;
+                await _context.SaveChangesAsync();
+            }
 
             return CreatedAtAction(nameof(GetOrderPositionModel), new { id = orderPositionModel.Id }, orderPositionModel);
         }
@@ -107,7 +113,11 @@ namespace FoodOrderApi.Controllers
             {
                 return NotFound();
             }
-
+            var order = await _context.OrderModel.FindAsync(orderPositionModel.OrderId);
+            if (order != null)
+            {
+                order.CurrentCost -= orderPositionModel.Cost;
+            }
             _context.OrderPositionModel.Remove(orderPositionModel);
             await _context.SaveChangesAsync();
 
