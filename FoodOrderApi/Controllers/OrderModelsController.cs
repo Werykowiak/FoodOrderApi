@@ -44,6 +44,21 @@ namespace FoodOrderApi.Controllers
 
             return orderModel;
         }
+        // GET: api/OrderModels/5
+        [HttpGet("{id}/GetNumberOfPositions")]
+        public async Task<ActionResult<int>> GetNumberOfPositions(int? id)
+        {
+            var orderModel = _context.OrderPositionModel
+                .Where(x => x.OrderId ==  id)
+                .Count();
+
+            if (orderModel == null)
+            {
+                return NotFound();
+            }
+
+            return orderModel;
+        }
 
         // PUT: api/OrderModels/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
@@ -75,7 +90,29 @@ namespace FoodOrderApi.Controllers
 
             return NoContent();
         }
+        [HttpPut("{id}/ChangeState/{isClosed}")]
+        public async Task<IActionResult> ChangeState(int? id,bool isClosed)
+        {
+            var orderModel = await _context.OrderModel.FindAsync(id);
+            orderModel.IsClosed = isClosed;
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!OrderModelExists(id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
 
+            return NoContent();
+        }
         // POST: api/OrderModels
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]

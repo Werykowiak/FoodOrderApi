@@ -27,8 +27,8 @@ namespace FoodOrderApi.Controllers
             return await _context.OrderPositionModel.ToListAsync();
         }
 
-        // GET: api/OrderPosition/5
-        /*[HttpGet("{id}")]
+        // GET: api/OrderPosition/5/GetById
+        [HttpGet("{id}/GetById")]
         public async Task<ActionResult<OrderPositionModel>> GetOrderPositionModel(int id)
         {
             var orderPositionModel = await _context.OrderPositionModel.FindAsync(id);
@@ -39,13 +39,27 @@ namespace FoodOrderApi.Controllers
             }
 
             return orderPositionModel;
-        }*/
+        }
 
         [HttpGet("{orderId}")]
         public async Task<ActionResult<IEnumerable<OrderPositionModel>>> GetOrderPositionsByOrderId(int orderId)
         {
             var orderPositionModel = await _context.OrderPositionModel
                 .Where(x => x.OrderId == orderId)
+                .ToListAsync();
+
+            if (orderPositionModel == null)
+            {
+                return NotFound();
+            }
+
+            return orderPositionModel;
+        }
+        [HttpGet("{orderId}/GetUserPositionsForOrder/{userId}")]
+        public async Task<ActionResult<IEnumerable<OrderPositionModel>>> GetUserPositionForUser(int orderId, string userId)
+        {
+            var orderPositionModel = await _context.OrderPositionModel
+                .Where(x => x.OrderId == orderId && x.UserId == userId)
                 .ToListAsync();
 
             if (orderPositionModel == null)
@@ -65,8 +79,43 @@ namespace FoodOrderApi.Controllers
             {
                 return BadRequest();
             }
-
+            var oldCost = _context.OrderPositionModel.Find(id).Cost;
+            _context.ChangeTracker.Clear();
+            //var oldCost = oldPosition.Cost;
+            
             _context.Entry(orderPositionModel).State = EntityState.Modified;
+
+            try
+            {
+                var order = await _context.OrderModel.FindAsync(orderPositionModel.OrderId);
+                if (order != null)
+                {
+                    var newCost = orderPositionModel.Cost - oldCost;
+                    order.CurrentCost += newCost;
+                }
+                //oldPosition = orderPositionModel;
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!OrderPositionModelExists(id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            return NoContent();
+        }
+        [HttpPut("{id}/SetIsPaid/{isPaid}")]
+        public async Task<IActionResult> SetIsPaid(int id,bool isPaid)
+        {
+
+            var orderPositionModel = await _context.OrderPositionModel.FindAsync(id);
+            orderPositionModel.IsPaid = isPaid;
 
             try
             {
@@ -86,7 +135,6 @@ namespace FoodOrderApi.Controllers
 
             return NoContent();
         }
-
         // POST: api/OrderPosition
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
