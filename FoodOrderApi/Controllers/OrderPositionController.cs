@@ -56,7 +56,7 @@ namespace FoodOrderApi.Controllers
             return orderPositionModel;
         }
         [HttpGet("{orderId}/GetUserPositionsForOrder/{userId}")]
-        public async Task<ActionResult<IEnumerable<OrderPositionModel>>> GetUserPositionForUser(int orderId, string userId)
+        public async Task<ActionResult<IEnumerable<OrderPositionModel>>> GetUserPositionForOrder(int orderId, string userId)
         {
             var orderPositionModel = await _context.OrderPositionModel
                 .Where(x => x.OrderId == orderId && x.UserId == userId)
@@ -69,6 +69,8 @@ namespace FoodOrderApi.Controllers
 
             return orderPositionModel;
         }
+
+        
 
         // PUT: api/OrderPosition/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754

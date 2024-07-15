@@ -45,11 +45,13 @@ namespace FoodOrderApi.Controllers
             return orderModel;
         }
         // GET: api/OrderModels/5
-        [HttpGet("{id}/GetNumberOfPositions")]
-        public async Task<ActionResult<int>> GetNumberOfPositions(int? id)
+        [HttpGet("{id}/GetNumberOfDistinctPositions")]
+        public async Task<ActionResult<int>> GetNumberOfDistinctPositions(int? id)
         {
             var orderModel = _context.OrderPositionModel
                 .Where(x => x.OrderId ==  id)
+                .Select(x => x.UserId )
+                .Distinct()
                 .Count();
 
             if (orderModel == null)
@@ -60,6 +62,28 @@ namespace FoodOrderApi.Controllers
             return orderModel;
         }
 
+        [HttpGet("{orderId}/GetUserCostForOrder/{userId}")]
+        public async Task<ActionResult<double>> GetUserCostForOrder(int orderId, string userId)
+        {
+            var result = await GetOrderModel(orderId);
+            var order = result.Value;
+            var UserOrdersCosts = await _context.OrderPositionModel
+                .Where(x => x.OrderId == orderId && x.UserId == userId)
+                .ToListAsync();
+            var totalCost = UserOrdersCosts.Sum(x => x.Cost);
+            if (UserOrdersCosts == null)
+            {
+                return NotFound();
+            }
+            if(order.CurrentCost < order.MinCostForFreeDelivery)
+            {
+                var numberOfUsers = await GetNumberOfDistinctPositions(orderId);
+                totalCost += (order.DeliveryFee/numberOfUsers.Value);
+            }
+            
+
+            return totalCost;
+        }
         // PUT: api/OrderModels/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
