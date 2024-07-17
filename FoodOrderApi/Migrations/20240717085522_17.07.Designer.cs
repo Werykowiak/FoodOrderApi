@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FoodOrderApi.Migrations
 {
     [DbContext(typeof(ApiDbContext))]
-    [Migration("20240711073132_11.07")]
-    partial class _1107
+    [Migration("20240717085522_17.07")]
+    partial class _1707
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -33,9 +33,9 @@ namespace FoodOrderApi.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int?>("Id"));
 
-                    b.Property<int?>("AccountNumber")
+                    b.Property<string>("AccountNumber")
                         .IsRequired()
-                        .HasColumnType("int");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<double?>("CurrentCost")
                         .HasColumnType("float");
@@ -58,9 +58,9 @@ namespace FoodOrderApi.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("PhoneNumber")
+                    b.Property<string>("PhoneNumber")
                         .IsRequired()
-                        .HasColumnType("int");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("RestaurantName")
                         .IsRequired()

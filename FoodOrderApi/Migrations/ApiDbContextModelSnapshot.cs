@@ -30,9 +30,9 @@ namespace FoodOrderApi.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int?>("Id"));
 
-                    b.Property<int?>("AccountNumber")
+                    b.Property<string>("AccountNumber")
                         .IsRequired()
-                        .HasColumnType("int");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<double?>("CurrentCost")
                         .HasColumnType("float");
@@ -55,9 +55,9 @@ namespace FoodOrderApi.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("PhoneNumber")
+                    b.Property<string>("PhoneNumber")
                         .IsRequired()
-                        .HasColumnType("int");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("RestaurantName")
                         .IsRequired()

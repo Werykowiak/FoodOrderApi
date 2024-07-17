@@ -16,9 +16,9 @@ namespace FoodOrderApi.Models
         public double? DeliveryFee { get; set; }
         public double? MinCostForFreeDelivery { get; set; }
         [Required]
-        public int? PhoneNumber { get; set; }
+        public string? PhoneNumber { get; set; }
         [Required]
-        public int? AccountNumber { get; set; }
+        public string? AccountNumber { get; set; }
         public bool IsClosed { get; set; }
         //public ICollection<OrderPosition> Positions { get; set; }
     }

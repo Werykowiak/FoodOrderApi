@@ -5,7 +5,7 @@
 namespace FoodOrderApi.Migrations
 {
     /// <inheritdoc />
-    public partial class _1107 : Migration
+    public partial class _1707 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -22,8 +22,8 @@ namespace FoodOrderApi.Migrations
                     CurrentCost = table.Column<double>(type: "float", nullable: true),
                     DeliveryFee = table.Column<double>(type: "float", nullable: false),
                     MinCostForFreeDelivery = table.Column<double>(type: "float", nullable: true),
-                    PhoneNumber = table.Column<int>(type: "int", nullable: false),
-                    AccountNumber = table.Column<int>(type: "int", nullable: false),
+                    PhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    AccountNumber = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     IsClosed = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
