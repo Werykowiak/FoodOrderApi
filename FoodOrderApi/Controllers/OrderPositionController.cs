@@ -48,12 +48,12 @@ namespace FoodOrderApi.Controllers
                 .Where(x => x.OrderId == orderId)
                 .ToListAsync();
 
-            if (orderPositionModel == null)
+            if (!orderPositionModel.Any())
             {
-                return NotFound();
+                return NoContent();
             }
 
-            return orderPositionModel;
+            return Ok(orderPositionModel);
         }
         [HttpGet("{orderId}/GetUserPositionsForOrder/{userId}")]
         public async Task<ActionResult<IEnumerable<OrderPositionModel>>> GetUserPositionForOrder(int orderId, string userId)
@@ -65,6 +65,10 @@ namespace FoodOrderApi.Controllers
             if (orderPositionModel == null)
             {
                 return NotFound();
+            }
+            if (!orderPositionModel.Any())
+            {
+                return NoContent();
             }
 
             return orderPositionModel;
