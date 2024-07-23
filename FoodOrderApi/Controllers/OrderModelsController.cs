@@ -31,6 +31,12 @@ namespace FoodOrderApi.Controllers
             return await _context.OrderModel.ToListAsync();
         }
 
+        [HttpGet("GetAllOrdersId")]
+        public async Task<ActionResult<IEnumerable<int?>>> GetAllOrdersId()
+        {
+            return await _context.OrderModel.Select(x => x.Id).ToListAsync();
+        }
+
         // GET: api/OrderModels/5
         [HttpGet("{id}")]
         public async Task<ActionResult<OrderModel>> GetOrderModel(int? id)
