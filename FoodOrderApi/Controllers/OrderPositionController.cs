@@ -150,7 +150,11 @@ namespace FoodOrderApi.Controllers
         {
             _context.OrderPositionModel.Add(orderPositionModel);
             var order = await _context.OrderModel.FindAsync(orderPositionModel.OrderId);
-            if (order != null)
+            if (order == null)
+            {
+                return BadRequest("Order not found.");
+            }
+            else
             {
                 order.CurrentCost += orderPositionModel.Cost;
                 //_context.Entry(orderPositionModel).State = EntityState.Modified;
