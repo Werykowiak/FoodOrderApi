@@ -42,10 +42,11 @@ namespace FoodOrderApi.Controllers
         }
 
         [HttpGet("{orderId}")]
-        public async Task<ActionResult<IEnumerable<OrderPositionModel>>> GetOrderPositionsByOrderId(int orderId)
+        public async Task<ActionResult<IEnumerable<int?>>> GetOrderPositionsByOrderId(int orderId)
         {
             var orderPositionModel = await _context.OrderPositionModel
                 .Where(x => x.OrderId == orderId)
+                .Select(x => x.Id)
                 .ToListAsync();
 
             if (!orderPositionModel.Any())
@@ -56,10 +57,11 @@ namespace FoodOrderApi.Controllers
             return Ok(orderPositionModel);
         }
         [HttpGet("{orderId}/GetUserPositionsForOrder/{userId}")]
-        public async Task<ActionResult<IEnumerable<OrderPositionModel>>> GetUserPositionForOrder(int orderId, string userId)
+        public async Task<ActionResult<IEnumerable<int?>>> GetUserPositionForOrder(int orderId, string userId)
         {
             var orderPositionModel = await _context.OrderPositionModel
                 .Where(x => x.OrderId == orderId && x.UserId == userId)
+                .Select(x => x.Id)
                 .ToListAsync();
 
             if (orderPositionModel == null)
@@ -71,7 +73,7 @@ namespace FoodOrderApi.Controllers
                 return NoContent();
             }
 
-            return orderPositionModel;
+            return Ok(orderPositionModel);
         }
 
         

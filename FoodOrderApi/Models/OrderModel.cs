@@ -7,6 +7,7 @@ namespace FoodOrderApi.Models
         [Key]
         public int? Id { get; set; }
         public string Orderer { get; set; }
+        public string OrdererName { get; set; }
         [Required]
         public string? RestaurantName { get; set; }
         [Required]

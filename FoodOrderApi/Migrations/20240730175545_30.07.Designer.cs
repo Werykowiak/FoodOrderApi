@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FoodOrderApi.Migrations
 {
     [DbContext(typeof(ApiDbContext))]
-    [Migration("20240717085522_17.07")]
-    partial class _1707
+    [Migration("20240730175545_30.07")]
+    partial class _3007
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -55,6 +55,10 @@ namespace FoodOrderApi.Migrations
                         .HasColumnType("float");
 
                     b.Property<string>("Orderer")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("OrdererName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
