@@ -81,7 +81,7 @@ namespace FoodOrderApi.Controllers
             {
                 return NotFound();
             }
-            if(order.CurrentCost < order.MinCostForFreeDelivery)
+            if(order.CurrentCost < order.MinCostForFreeDelivery || order.MinCostForFreeDelivery==null)
             {
                 var numberOfUsers = await GetNumberOfDistinctPositions(orderId);
                 totalCost += (order.DeliveryFee/numberOfUsers.Value);
