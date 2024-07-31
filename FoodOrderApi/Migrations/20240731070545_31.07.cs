@@ -5,7 +5,7 @@
 namespace FoodOrderApi.Migrations
 {
     /// <inheritdoc />
-    public partial class _3007 : Migration
+    public partial class _3107 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -39,6 +39,7 @@ namespace FoodOrderApi.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     UserId = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    UserName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Position = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Comment = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Additives = table.Column<string>(type: "nvarchar(max)", nullable: true),

@@ -101,6 +101,10 @@ namespace FoodOrderApi.Controllers
                     var newCost = orderPositionModel.Cost - oldCost;
                     order.CurrentCost += newCost;
                 }
+                else
+                {
+                    return BadRequest();
+                }
                 //oldPosition = orderPositionModel;
                 await _context.SaveChangesAsync();
             }
@@ -121,13 +125,21 @@ namespace FoodOrderApi.Controllers
         [HttpPut("{id}/SetIsPaid/{isPaid}")]
         public async Task<IActionResult> SetIsPaid(int id,bool isPaid)
         {
-
             var orderPositionModel = await _context.OrderPositionModel.FindAsync(id);
             orderPositionModel.IsPaid = isPaid;
 
             try
             {
-                await _context.SaveChangesAsync();
+                var order = await _context.OrderModel.FindAsync(orderPositionModel.OrderId);
+                if (order != null && !order.IsClosed)
+                {
+                    await _context.SaveChangesAsync();
+                }
+                else
+                {
+                    return BadRequest();
+                }
+                
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -150,7 +162,7 @@ namespace FoodOrderApi.Controllers
         {
             _context.OrderPositionModel.Add(orderPositionModel);
             var order = await _context.OrderModel.FindAsync(orderPositionModel.OrderId);
-            if (order == null)
+            if (order == null || order.IsClosed)
             {
                 return BadRequest("Order not found.");
             }
@@ -174,9 +186,14 @@ namespace FoodOrderApi.Controllers
                 return NotFound();
             }
             var order = await _context.OrderModel.FindAsync(orderPositionModel.OrderId);
-            if (order != null)
+            if (order == null || order.IsClosed)
+            {
+                return BadRequest();
+            }
+            else
             {
                 order.CurrentCost -= orderPositionModel.Cost;
+               
             }
             _context.OrderPositionModel.Remove(orderPositionModel);
             await _context.SaveChangesAsync();

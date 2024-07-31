@@ -86,7 +86,10 @@ namespace FoodOrderApi.Controllers
                 var numberOfUsers = await GetNumberOfDistinctPositions(orderId);
                 totalCost += (order.DeliveryFee/numberOfUsers.Value);
             }
-            
+            if (order.CurrentCost == 0)
+                totalCost = 0;
+
+
 
             return totalCost;
         }
@@ -97,11 +100,13 @@ namespace FoodOrderApi.Controllers
         {
             if (id != orderModel.Id)
             {
+                
                 return BadRequest();
             }
 
             _context.Entry(orderModel).State = EntityState.Modified;
-
+            /*var oldModel = await _context.OrderModel.FindAsync(id);
+            oldModel = */
             try
             {
                 await _context.SaveChangesAsync();
@@ -110,6 +115,7 @@ namespace FoodOrderApi.Controllers
             {
                 if (!OrderModelExists(id))
                 {
+                    Console.WriteLine("400");
                     return NotFound();
                 }
                 else
