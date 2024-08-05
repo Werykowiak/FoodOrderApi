@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using FoodOrderApi.Models;
+using FoodOrderApi.Migrations;
+using Microsoft.AspNetCore.SignalR;
 
 namespace FoodOrderApi.Controllers
 {
@@ -14,10 +16,11 @@ namespace FoodOrderApi.Controllers
     public class OrderPositionController : ControllerBase
     {
         private readonly ApiDbContext _context;
-
-        public OrderPositionController(ApiDbContext context)
+        private readonly IHubContext<OrderHub> _hubContext;
+        public OrderPositionController(ApiDbContext context, IHubContext<OrderHub> hubContext)
         {
             _context = context;
+            _hubContext = hubContext;
         }
 
         // GET: api/OrderPosition
@@ -107,6 +110,7 @@ namespace FoodOrderApi.Controllers
                 }
                 //oldPosition = orderPositionModel;
                 await _context.SaveChangesAsync();
+                await _hubContext.Clients.All.SendAsync("ReceivePositionChange");
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -134,6 +138,7 @@ namespace FoodOrderApi.Controllers
                 if (order != null && !order.IsClosed)
                 {
                     await _context.SaveChangesAsync();
+                    await _hubContext.Clients.All.SendAsync("ReceivePositionChange");
                 }
                 else
                 {
@@ -171,6 +176,7 @@ namespace FoodOrderApi.Controllers
                 order.CurrentCost += orderPositionModel.Cost;
                 //_context.Entry(orderPositionModel).State = EntityState.Modified;
                 await _context.SaveChangesAsync();
+                await _hubContext.Clients.All.SendAsync("ReceivePositionChange");
             }
 
             return CreatedAtAction(nameof(GetOrderPositionModel), new { id = orderPositionModel.Id }, orderPositionModel);
@@ -196,8 +202,9 @@ namespace FoodOrderApi.Controllers
                
             }
             _context.OrderPositionModel.Remove(orderPositionModel);
+            
             await _context.SaveChangesAsync();
-
+            await _hubContext.Clients.All.SendAsync("ReceivePositionChange");
             return NoContent();
         }
 

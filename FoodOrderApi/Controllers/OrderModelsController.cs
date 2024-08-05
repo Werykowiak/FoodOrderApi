@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using FoodOrderApi.Models;
-using FoodOrderApi.Hubs;
-using Microsoft.AspNet.SignalR;
+using Microsoft.AspNetCore.SignalR;
+using FoodOrderApi.Migrations;
 
 namespace FoodOrderApi.Controllers
 {
@@ -16,12 +11,12 @@ namespace FoodOrderApi.Controllers
     public class OrderModelsController : ControllerBase
     {
         private readonly ApiDbContext _context;
-        //private readonly IHubContext<OrderModelHub> _hubContext;
+        private readonly IHubContext<OrderHub> _hubContext;
 
-        public OrderModelsController(ApiDbContext context)
+        public OrderModelsController(ApiDbContext context, IHubContext<OrderHub> hubContext)
         {
             _context = context;
-            //_hubContext = hubContext;
+            _hubContext = hubContext;
         }
 
         // GET: api/OrderModels
@@ -110,6 +105,7 @@ namespace FoodOrderApi.Controllers
             try
             {
                 await _context.SaveChangesAsync();
+                await _hubContext.Clients.All.SendAsync("ReceiveOrderDetailChange");
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -134,6 +130,7 @@ namespace FoodOrderApi.Controllers
             try
             {
                 await _context.SaveChangesAsync();
+                await _hubContext.Clients.All.SendAsync("ReceiveOrderDetailChange");
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -159,9 +156,9 @@ namespace FoodOrderApi.Controllers
             //Console.WriteLine("dodawanie");
             _context.OrderModel.Add(orderModel);
 
+            
             await _context.SaveChangesAsync();
-
-            //await _hubContext.Clients.All.SendAsync
+            await _hubContext.Clients.All.SendAsync("ReceiveOrdersChange");
 
             return CreatedAtAction(nameof(GetOrderModel), new { id = orderModel.Id }, orderModel);
         }
@@ -184,7 +181,7 @@ namespace FoodOrderApi.Controllers
             }
             _context.OrderModel.Remove(orderModel);
             await _context.SaveChangesAsync();
-
+            await _hubContext.Clients.All.SendAsync("ReceiveOrdersChange");
             return NoContent();
         }
 
